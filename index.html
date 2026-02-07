@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>For My Love 💗</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: 'Dancing Script', cursive;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(#ffd1e8, #ffc0da);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Petals */
+.petal {
+  position: fixed;
+  top: -50px;
+  font-size: 20px;
+  opacity: 0.7;
+  animation: fall linear infinite;
+  pointer-events: none;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(110vh) rotate(360deg);
+  }
+}
+
+/* A4 Card */
+.card {
+  width: 794px;
+  height: 1123px;
+  perspective: 2000px;
+  position: relative;
+}
+
+/* Pages */
+.page {
+  width: 100%;
+  height: 100%;
+  background: #ffe6f2;
+  position: absolute;
+  transform-origin: left;
+  transition: transform 1.2s ease;
+  padding: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 34px;
+  color: #b30059;
+  box-shadow: 0 0 20px rgba(0,0,0,0.15);
+}
+
+.page.hidden { display: none; }
+
+.cover {
+  background: linear-gradient(#ffb6d9, #ffcce6);
+  font-size: 42px;
+  flex-direction: column;
+}
+
+.ribbon {
+  width: 60px;
+  height: 200px;
+  background: #ff4d94;
+  margin-top: 40px;
+  border-radius: 10px;
+  cursor: grab;
+}
+
+.turn {
+  position: absolute;
+  bottom: 40px;
+  font-size: 22px;
+}
+
+.flipped {
+  transform: rotateY(-180deg);
+}
+
+/* Sparkle hearts */
+.sparkle {
+  position: absolute;
+  font-size: 22px;
+  animation: sparkle 3s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0% { opacity: 0; transform: scale(0.5) translateY(0); }
+  50% { opacity: 1; transform: scale(1) translateY(-30px); }
+  100% { opacity: 0; transform: scale(0.5) translateY(-60px); }
+}
+
+.final {
+  font-size: 48px;
+}
+</style>
+</head>
+
+<body>
+
+<audio id="bgMusic" src="music.mp3" loop></audio>
+
+<div class="card">
+
+<div class="page cover" id="cover">
+  💐💖😘💍
+  <div>Pull the ribbon</div>
+  <div class="ribbon" id="ribbon"></div>
+</div>
+
+<div class="page hidden" id="p2">
+  <div id="typeText"></div>
+  <div class="turn">Turn the page →</div>
+</div>
+
+<div class="page hidden" id="p3">
+  Thank you for being part of my journey from a boy to a man.<br><br>
+  Now, I want you to walk with me as I become not just a man — but <b>your</b> man.
+  <div class="turn">Turn the page →</div>
+</div>
+
+<div class="page hidden" id="p4">
+  I’ll stand by you with strength and steadiness, always having your back.<br><br>
+  Tell me what you want, and I’ll make it my purpose to give it to you.
+  <div class="turn">Turn the page →</div>
+</div>
+
+<div class="page hidden" id="p5">
+  I promise I’ll never fall short — neither wealth-wise nor appearance-wise for you.<br><br>
+  So just hold your head high and think only of how far you can rise.
+  <div class="turn">Turn the page →</div>
+</div>
+
+<div class="page hidden" id="p6">
+  So <b>CA Shrushti Kachare</b>,<br><br>
+  will you be my other half for the rest of my life,<br>
+  to grow stronger together?
+  <div class="turn">Turn the page →</div>
+</div>
+
+<div class="page hidden final" id="final">
+  I love you sooo much,<br>
+  my Babbdduuu 😘❤️
+</div>
+
+</div>
+
+<script>
+/* Music */
+const music = document.getElementById("bgMusic");
+function playMusic() {
+  music.volume = 0;
+  music.play();
+  let v = 0;
+  const fade = setInterval(() => {
+    if (v < 0.5) {
+      v += 0.02;
+      music.volume = v;
+    } else clearInterval(fade);
+  }, 100);
+}
+
+/* Petals generator */
+setInterval(() => {
+  const petal = document.createElement("div");
+  petal.className = "petal";
+  petal.innerHTML = "🌸";
+  petal.style.left = Math.random() * 100 + "vw";
+  petal.style.fontSize = 15 + Math.random() * 20 + "px";
+  petal.style.animationDuration = 5 + Math.random() * 5 + "s";
+  document.body.appendChild(petal);
+  setTimeout(() => petal.remove(), 10000);
+}, 400);
+
+/* Pages */
+const ribbon = document.getElementById("ribbon");
+const cover = document.getElementById("cover");
+const pages = ["p2","p3","p4","p5","p6","final"];
+let index = 0;
+
+ribbon.addEventListener("mousedown", () => {
+  cover.classList.add("flipped");
+  playMusic();
+  setTimeout(() => {
+    cover.style.display = "none";
+    showPage();
+    typeText();
+  }, 1200);
+});
+
+function showPage() {
+  const page = document.getElementById(pages[index]);
+  page.classList.remove("hidden");
+
+  if (page.id === "final") sparkleHearts(page);
+}
+
+document.querySelectorAll(".page").forEach(p => {
+  p.addEventListener("click", () => {
+    if (p.id !== "cover") {
+      p.classList.add("flipped");
+      setTimeout(() => {
+        p.style.display = "none";
+        index++;
+        if (index < pages.length) showPage();
+      }, 1000);
+    }
+  });
+});
+
+/* Typing */
+const text = "My love for you isn’t limited to today—it grows stronger every day.\n\nAnd on this special occasion, I want to ask you…";
+let i = 0;
+function typeText() {
+  const el = document.getElementById("typeText");
+  const t = setInterval(() => {
+    el.innerHTML += text[i] === "\n" ? "<br>" : text[i];
+    i++;
+    if (i >= text.length) clearInterval(t);
+  }, 50);
+}
+
+/* Sparkle hearts */
+function sparkleHearts(container) {
+  setInterval(() => {
+    const heart = document.createElement("div");
+    heart.className = "sparkle";
+    heart.innerHTML = "💖";
+    heart.style.left = Math.random() * 80 + "%";
+    heart.style.top = Math.random() * 80 + "%";
+    container.appendChild(heart);
+    setTimeout(() => heart.remove(), 3000);
+  }, 600);
+}
+</script>
+
+</body>
+</html>
